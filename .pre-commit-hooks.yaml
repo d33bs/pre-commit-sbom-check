@@ -1,0 +1,9 @@
+# .pre-commit-hooks.yaml
+- id: generate-sbom
+  name: Generate and Compare SBOM
+  description: Generate an SBOM using Anchore Syft and compare it with the baseline using sbomdiff.
+  entry: scripts/generate_sbom.sh
+  language: python
+  additional_dependencies: ["sbomdiff"]  # Pre-commit will install sbomdiff in a virtual environment
+  pass_filenames: false
+  always_run: true
