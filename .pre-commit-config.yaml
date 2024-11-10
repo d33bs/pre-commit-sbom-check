@@ -11,6 +11,10 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
       - id: detect-private-key
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: "v2.5.0"
+    hooks:
+      - id: pyproject-fmt
   - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
@@ -35,3 +39,10 @@ repos:
     rev: v0.10.0
     hooks:
       - id: shellcheck
+  - repo: local
+    hooks:
+      - id: try-local-repo
+        name: Try Local Repo Hooks
+        entry: pre-commit try-repo . --all-files
+        language: system
+        pass_filenames: false
