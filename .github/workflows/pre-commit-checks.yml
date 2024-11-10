@@ -27,10 +27,12 @@ jobs:
         id: check_modified
         run: |
           # Check if any files were modified by pre-commit
-          if git diff --exit-code; then
-            echo "no_changes=true" >> "$GITHUB_ENV"
-          else
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "changes"
             echo "no_changes=false" >> "$GITHUB_ENV"
+          else
+            echo "nochanges"
+            echo "no_changes=true" >> "$GITHUB_ENV"
           fi
       - name: Auto-commit fixes if there are changes
         if: ${{ env.no_changes == 'false' }}
@@ -47,5 +49,5 @@ jobs:
             steps.pre_commit.outcome == 'failure' }}
         run: |
           echo "Pre-commit checks failed, \
-            and no changes were made. Failing the action."
+          and no changes were made. Failing the action."
           exit 1
