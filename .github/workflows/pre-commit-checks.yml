@@ -47,8 +47,8 @@ jobs:
           git add .
           git commit -m "chore: auto-apply pre-commit fixes"
           git push
-      - name: Fail if no changes were made but pre-commit failed
-        if: ${{ env.no_changes == 'true' &&
+      - name: Fail if changes were made or pre-commit failed
+        if: ${{ env.no_changes == 'false' ||
             steps.pre_commit.outcome == 'failure' }}
         run: |
           echo "Pre-commit checks failed, \
