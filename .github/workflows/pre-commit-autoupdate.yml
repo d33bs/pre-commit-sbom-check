@@ -32,11 +32,15 @@ jobs:
       - name: Commit and push updated pre-commit config if changed
         if: ${{ env.no_changes == 'false' }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name \
+            "github-actions[bot]"
+          git config --global user.email \
+            "github-actions[bot]@users.noreply.github.com"
           git add .pre-commit-config.yaml
           git commit -m "chore: update pre-commit hooks"
           git push
       - name: Report no changes needed
         if: ${{ env.no_changes == 'true' }}
-        run: echo "No updates to pre-commit hooks were needed. Passing without changes."
+        run: |
+          echo "No updates to pre-commit hooks were needed. \
+          Passing without changes."
