@@ -28,9 +28,9 @@ jobs:
         run: |
           # Check if any files were modified by pre-commit
           if git diff --exit-code; then
-            echo "no_changes=true" >> $GITHUB_ENV
+            echo "no_changes=true" >> "$GITHUB_ENV"
           else
-            echo "no_changes=false" >> $GITHUB_ENV
+            echo "no_changes=false" >> "$GITHUB_ENV"
           fi
       - name: Auto-commit fixes if there are changes
         if: ${{ env.no_changes == 'false' }}
@@ -43,9 +43,8 @@ jobs:
           git commit -m "chore: auto-apply pre-commit fixes"
           git push
       - name: Fail if no changes were made but pre-commit failed
-        if: |
-          ${{ env.no_changes == 'true' &&
-          steps.pre_commit.outcome == 'failure' }}
+        if: ${{ env.no_changes == 'true' &&
+            steps.pre_commit.outcome == 'failure' }}
         run: |
           echo "Pre-commit checks failed, \
             and no changes were made. Failing the action."
