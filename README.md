@@ -15,7 +15,7 @@ Install this pre-commit hook into your project with a block like the following:
 ```yaml
 repos:
   - repo: https://github.com/d33bs/pre-commit-sbom-check
-    rev: v0.0.2
+    rev: v0.0.3
     hooks:
-        - id: generate-sbom
+        - id: generate-and-compare-sbom
 ```
