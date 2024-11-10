@@ -41,8 +41,8 @@ repos:
       - id: shellcheck
   - repo: local
     hooks:
-      - id: try-local-repo
-        name: Try Local Repo Hooks
+      - id: pre-commit-sbom-check-dev
+        name: pre-commit-sbom-check-dev
         entry: pre-commit try-repo . --all-files
         language: system
         pass_filenames: false

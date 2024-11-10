@@ -17,9 +17,8 @@ classifiers = [
 ]
 dynamic = [ "version" ]
 dependencies = [
-    "sbomdiff>=0.5.6",
+  "sbomdiff>=0.5.6",
 ]
-
 
 [tool.setuptools_scm]
 root = "."
@@ -31,4 +30,3 @@ formats = "ipynb,py:light"
 dev-dependencies = [
   "pre-commit>=4.0.1",
 ]
-
