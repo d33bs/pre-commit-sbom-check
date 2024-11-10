@@ -4,7 +4,7 @@
   description: >-
     Generate an SBOM using Anchore Syft and
     compare it with the baseline using sbomdiff.
-  entry: scripts/generate_sbom.sh
+  entry: scripts/generate_and_compare_sbom.sh
   language: python
   additional_dependencies: ["sbomdiff"]
   pass_filenames: false
