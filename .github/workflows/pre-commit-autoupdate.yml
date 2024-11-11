@@ -1,0 +1,53 @@
+name: Pre-commit Autoupdate
+
+on:
+  schedule:
+    # Runs every Monday at 3:00 AM UTC
+    - cron: '0 3 * * 1'
+  # Allows manual trigger as well
+  workflow_dispatch:
+
+jobs:
+  pc-autoupdate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: install pre-commit
+        run: python -m pip install pre-commit
+      - name: Run pre-commit autoupdate
+        id: autoupdate
+        run: |
+          pre-commit autoupdate
+      - name: Check for modified files
+        id: check_modified
+        run: |
+          # Check if any files were modified by pre-commit
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "changes"
+            echo "no_changes=false" >> "$GITHUB_ENV"
+          else
+            echo "nochanges"
+            echo "no_changes=true" >> "$GITHUB_ENV"
+          fi
+      - name: Auto-commit fixes if there are changes
+        if: ${{ env.no_changes == 'false' }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email \
+            "github-actions[bot]@users.noreply.github.com"
+          git checkout -b pre-commit-autoupdate
+          git add .
+          git commit -m "chore: auto-apply pre-commit fixes"
+          git push -u origin pre-commit-autoupdate
+      - name: Create Pull Request
+        if: ${{ env.no_changes == 'false' }}
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: pre-commit-autoupdate
+          title: "chore: auto-apply pre-commit fixes"
+          body: "Automated changes by pre-commit autoupdate."
+          commit-message: "chore: auto-apply pre-commit fixes"
