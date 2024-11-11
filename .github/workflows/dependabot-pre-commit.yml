@@ -4,10 +4,10 @@ name: Dependabot Auto-Commit
 on:
   pull_request:
     types: [opened, synchronize]
-    branches:
-      # Target only Dependabot branches
-      - "dependabot/*"
   workflow_dispatch:
+
+permissions:
+  pull-requests: write
 
 jobs:
   dependabot-autoupdate:
@@ -27,8 +27,11 @@ jobs:
       - name: Install pre-commit
         run: python -m pip install pre-commit
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        id: pre_commit
+        run: pre-commit run --all-files --color=always --show-diff-on-failure
+        continue-on-error: true
       - name: Check for changes
+        if: ${{ steps.pre_commit.outcome == 'failure' }}
         id: check_changes
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
@@ -37,7 +40,8 @@ jobs:
             echo "changes_detected=false" >> "$GITHUB_ENV"
           fi
       - name: Commit and push changes
-        if: env.changes_detected == 'true'
+        if: ${{ env.changes_detected == 'true' &&
+          steps.pre_commit.outcome == 'failure' }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email \
@@ -45,3 +49,15 @@ jobs:
           git add .
           git commit -m "chore: auto-apply pre-commit fixes"
           git push
+      # run pre-commit again to determine if there are still issues
+      - name: Run pre-commit
+        if: ${{ env.changes_detected == 'true' &&
+          steps.pre_commit.outcome == 'failure' }}
+        run: pre-commit run --all-files --color=always --show-diff-on-failure
+      # raise error if there were no changes and pre-commit failed
+      - name: Errors detected
+        if: ${{ env.changes_detected == 'false' &&
+          steps.pre_commit.outcome == 'failure' }}
+        run: |
+          echo 'Pre-commit failed and was unable to make changes'
+          exit 1
