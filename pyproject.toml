@@ -26,6 +26,7 @@ root = "."
 [tool.jupytext]
 formats = "ipynb,py:light"
 
+
 [tool.uv]
 dev-dependencies = [
   "pre-commit>=4.0.1",
