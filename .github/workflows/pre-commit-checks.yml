@@ -12,7 +12,9 @@ on:
 
 jobs:
   pre_commit_checks:
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    # avoid running check for dependabot PR's
+    if: ${{ github.event_name != 'pull_request' &&
+      github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
