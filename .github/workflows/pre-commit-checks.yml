@@ -11,12 +11,15 @@ on:
 
 jobs:
   pre_commit_checks:
-    if: "github.event.action != 'labeled' || github.event.label.name == 'pre-commit ci run'"
+    if: "github.event.action != 'labeled' ||
+      github.event.label.name == 'pre-commit ci run'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: gh pr edit ${{ github.event.number }} --remove-label 'pre-commit ci run'
-        if: github.event.action == 'labeled' && github.event.label.name == 'pre-commit ci run'
+      - run: gh pr edit ${{ github.event.number }}
+          --remove-label 'pre-commit ci run'
+        if: github.event.action == 'labeled' &&
+          github.event.label.name == 'pre-commit ci run'
         env:
           GH_TOKEN: ${{ github.token }}
       - uses: actions/setup-python@v5
