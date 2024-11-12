@@ -2,8 +2,8 @@ name: pre-commit autoupdate
 
 on:
   schedule:
-    # Runs every Monday at 3:00 AM UTC
-    - cron: '0 3 * * 1'
+    # Runs every Tueday at 9:00 AM MT
+    - cron: '0 9 * * 2'
   # Allows manual trigger as well
   workflow_dispatch:
 
