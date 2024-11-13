@@ -2,8 +2,8 @@ name: pre-commit autoupdate
 
 on:
   schedule:
-    # Runs every Tueday at 9:00 AM MT
-    - cron: '0 9 * * 2'
+    # Runs at 1230 UTC on Wednesdays
+    - cron: '30 12 * * 3'
   # Allows manual trigger as well
   workflow_dispatch:
 
@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -49,6 +50,7 @@ jobs:
         if: ${{ env.no_changes == 'false' }}
         uses: peter-evans/create-pull-request@v7
         with:
+          base: main
           branch: pre-commit-autoupdate
           title: "chore: auto-apply pre-commit fixes"
           body: "Automated changes by pre-commit autoupdate."
