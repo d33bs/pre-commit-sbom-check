@@ -35,21 +35,11 @@ jobs:
             echo "nochanges"
             echo "no_changes=true" >> "$GITHUB_ENV"
           fi
-      - name: Auto-commit fixes if there are changes
-        if: ${{ env.no_changes == 'false' }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email \
-            "github-actions[bot]@users.noreply.github.com"
-          git checkout -b pre-commit-autoupdate
-          git add .
-          git commit -m "chore: auto-apply pre-commit fixes"
-          git push -u origin pre-commit-autoupdate
       - name: Create Pull Request
         if: ${{ env.no_changes == 'false' }}
         uses: peter-evans/create-pull-request@v7
         with:
           branch: pre-commit-autoupdate
           title: "chore: auto-apply pre-commit fixes"
-          body: "Automated changes by pre-commit autoupdate."
+          body: "Automated update for pre-commit hook versions."
           commit-message: "chore: auto-apply pre-commit fixes"
